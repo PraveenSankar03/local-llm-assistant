@@ -47,7 +47,7 @@ Conversation memory is maintained using a database and passed to the model for c
 ### 1. Clone repo
 
 ````bash
-git clone 
+git clone https://github.com/PraveenSankar03/local-llm-assistant.git
 cd your-repo
 ````
 
