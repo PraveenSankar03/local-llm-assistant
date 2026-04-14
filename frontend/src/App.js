@@ -140,7 +140,7 @@ export default function App() {
   return (
     <div className="app">
       <aside className="sidebar">
-        <div className="logo">Null Void - Qwen 4B</div>
+        <div className="logo">Proximity</div>
 
         <button className="new-chat" onClick={createNewChat}>
           + New Chat
@@ -170,20 +170,58 @@ export default function App() {
       </aside>
 
       <main className="main">
+        {currentChat && (
+          <div className="topbar">
+            <div>
+              <div className="topbar-title">
+                {chats.find((c) => c.id === currentChat)?.title ||
+                  `Chat ${currentChat}`}
+              </div>
+              <div className="topbar-sub">Qwen 4B</div>
+            </div>
+            <div className="topbar-badge">Qwen 4B</div>
+          </div>
+        )}
         <div className="chat">
           {!currentChat && (
-            <div className="empty">How can I help you today ?</div>
+            <div className="empty">How can I help you today?</div>
           )}
 
           {messages.map((msg, i) => (
             <div key={i} className={`row ${msg.sender}`}>
-              <div className="bubble">{msg.text}</div>
+              {msg.sender === "bot" && (
+                <div className="bot-avatar">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                  </svg>
+                </div>
+              )}
+              <div className="bubble-wrap">
+                <div className="bubble">{msg.text}</div>
+                <div className="msg-time">
+                  {new Date().toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
+              </div>
             </div>
           ))}
 
           {loading && (
             <div className="row bot">
-              <div className="bubble typing">Typing...</div>
+              <div className="typing">
+                <span className="dot"></span>
+                <span className="dot"></span>
+                <span className="dot"></span>
+              </div>
             </div>
           )}
 
@@ -197,7 +235,25 @@ export default function App() {
             placeholder="Ask anything..."
             onKeyDown={(e) => e.key === "Enter" && sendPrompt()}
           />
-          <button onClick={sendPrompt}>➤</button>
+          <button onClick={sendPrompt} aria-label="Send">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon
+                points="22 2 15 22 11 13 2 9 22 2"
+                fill="white"
+                stroke="none"
+              />
+            </svg>
+          </button>
         </div>
       </main>
     </div>
