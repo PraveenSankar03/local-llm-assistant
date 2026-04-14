@@ -1,78 +1,138 @@
-# Personal AI Assistant (Local LLM)
+# Privacy-First Local LLM Orchestration Engine
 
-A full-stack AI assistant built using **React + Django + Ollama**, running completely **offline with a local LLM**.
+A full-stack AI chat assistant that runs **entirely on your machine** — no cloud, no API costs, no data leaving your device. Built with React, Django REST Framework, and Ollama (Qwen 4B).
 
----
-
-##  Features
-
-- 💬 Chat with AI (local model)
-- 🧠 Conversation memory
-- 📂 Multiple chat sessions (ChatGPT-style)
-- ✏️ Auto-generated chat titles
-- 🗑️ Delete chats
-- ⚡ No external APIs (fully offline)
+> **Why local?** Most AI assistants send your conversations to external servers. This project was built on the deliberate architectural decision to keep inference local — eliminating API costs entirely and ensuring 100% data privacy.
 
 ---
 
-##  Tech Stack
+## Demo
 
-### Frontend
-- React
-
-### Backend
-- Django
-- Django REST Framework
-
-### AI
-- Ollama (local LLM runtime)
-- Qwen:4b model
+![Main chat interface](<./assests/chat_interface.png>)
 
 ---
 
-##  How It Works
+## Features
 
-1. User sends a message from the React UI  
-2. Django backend receives the request  
-3. Backend sends prompt to local LLM via Ollama  
-4. LLM generates a response  
-5. Response is returned and displayed in the UI  
-
-Conversation memory is maintained using a database and passed to the model for context-aware responses.
+- **Fully offline** — zero cloud dependency, zero API cost
+- **Persistent chat sessions** — ChatGPT-style sidebar with multiple conversations
+- **Conversation memory** — full message history passed to the model for context-aware responses
+- **Auto-generated titles** — chat sessions are named automatically based on content
+- **Real-time chat UI** — no page reloads, instant responses
+- **Delete sessions** — clean session management
 
 ---
 
-##  Installation
+## Tech Stack
 
-### 1. Clone repo
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React.js |
+| Backend | Django, Django REST Framework |
+| AI Runtime | Ollama |
+| LLM Model | Qwen 4B |
+| Database | SQLite |
 
-````bash
+---
+
+## Architecture
+
+```
+React UI  →  Django REST API  →  Ollama (local)  →  Qwen 4B (on-device)
+                  ↕
+              SQLite DB
+          (session & message store)
+```
+
+1. User sends a message from the React frontend
+2. Django backend receives the request and retrieves conversation history from SQLite
+3. Full conversation context is passed to the local LLM via Ollama
+4. Qwen 4B generates a response entirely on-device
+5. Response is saved to the database and returned to the UI
+
+No data ever leaves your machine.
+
+---
+
+## Prerequisites
+
+- Python 3.10+
+- Node.js 18+
+- [Ollama](https://ollama.com) installed on your machine
+
+---
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
 git clone https://github.com/PraveenSankar03/local-llm-assistant.git
-cd your-repo
-````
+cd local-llm-assistant
+```
 
-### Install Ollama
+### 2. Set up Ollama and pull the model
 
-````bash
-Download and install Ollama from:
-https://ollama.com
-After installation, in cmd run:
+```bash
+# Install Ollama from https://ollama.com, then run:
+ollama pull qwen:4b
+
+# Verify it works
 ollama run qwen:4b
-````    
+```
 
-### Backend setup
+### 3. Set up the backend
 
-````bash
+```bash
 cd backend
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
-````
+```
 
-### Frontend setup
+### 4. Set up the frontend
 
-````bash
+```bash
 cd frontend
 npm install
 npm start
-````
+```
+
+### 5. Open the app
+
+Navigate to `http://localhost:3000` in your browser.
+
+---
+
+## Project Structure
+
+```
+local-llm-assistant/
+├── backend/
+│   ├── chat/               # Django app — models, views, serializers
+│   ├── manage.py
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   └── App.js
+│   └── package.json
+└── README.md
+```
+
+---
+
+## Design Decisions
+
+**Why Ollama over cloud APIs?**
+Cloud LLM APIs (OpenAI, Gemini, etc.) charge per token and send your data to external servers. Ollama runs open-source models locally, making this assistant completely free to run after setup and fully air-gapped for privacy-sensitive use cases.
+
+**Why Qwen 4B?**
+Qwen 4B offers a strong balance between response quality and hardware requirements — capable of running on a mid-range machine without a dedicated GPU, while still producing coherent, context-aware responses.
+
+---
+
+## Author
+
+**Praveen Sankar**
+[GitHub](https://github.com/PraveenSankar03) · [LinkedIn](https://www.linkedin.com/in/praveen-kumar-40109b366/)
